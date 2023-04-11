@@ -17,11 +17,11 @@
             <form action="##">
               <div class="input-text clearFix">
                 <span></span>
-                <input type="text" placeholder="邮箱/用户名/手机号">
+                <input type="text" placeholder="邮箱/用户名/手机号" v-model="name">
               </div>
               <div class="input-text clearFix">
                 <span class="pwd"></span>
-                <input type="text" placeholder="请输入密码">
+                <input type="text" placeholder="请输入密码" v-model="pwy">
               </div>
               <div class="setting clearFix">
                 <label class="checkbox inline">
@@ -30,7 +30,7 @@
                 </label>
                 <span class="forget">忘记密码？</span>
               </div>
-              <button class="btn">登&nbsp;&nbsp;录</button>
+              <button class="btn" @click.prevent="dl()">登&nbsp;&nbsp;录</button>
             </form>
 
             <div class="call clearFix">
@@ -68,10 +68,35 @@
 <script>
   export default {
     name: 'Login',
+	data() {
+		return{
+			name:'',
+			pwy:''
+		}
+	},
+	methods:{
+		dl(){
+			this.$http.post('/api/user/passport/login',{
+				phone:this.name,
+				password:this.pwy
+			}).then(res=>{
+				console.log(res)
+				if(res.code===200){
+					alert('登录成功')
+				}else{
+					alert(res.message)
+				}
+			})
+		}
+	}
   }
 </script>
 
 <style lang="less" scoped>
+	*{
+		margin: 0;
+		padding: 0;
+	}
   .login-container {
     .login-wrap {
       height: 487px;
@@ -95,10 +120,10 @@
         padding: 20px;
 
         .tab {
-
+			display: flex;
           li {
             width: 50%;
-            float: left;
+            // float: left;
             text-align: center;
 			list-style: none;
             a {
@@ -144,13 +169,13 @@
                 width: 37px;
                 height: 32px;
                 border: 1px solid #ccc;
-                // background: url(../../assets/images/icons.png) no-repeat -10px -201px;
+                background: url('images/账户.png') ;
                 box-sizing: border-box;
                 border-radius: 2px 0 0 2px;
               }
 
               .pwd {
-                background-position: -72px -201px;
+               background: url('images/输入密码.png') ;
               }
 
               input {
