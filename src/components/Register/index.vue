@@ -47,6 +47,7 @@
 			</div>
 		</form>
 		<h1>main分支注册的底部</h1>
+		<h1>login分支的注册底部</h1>
 		<!-- 底部 -->
 		<div class="copyright">
 			<ul>
