@@ -9,7 +9,7 @@
 			<div class="content">
 				<label>手机号:</label>
 				<input type="text" placeholder="请输入你的手机号" v-model="FormData.phone">
-				<span class="error-msg">
+				<span class="error-msg">{{yhm}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
@@ -17,28 +17,28 @@
 				<label>验证码:</label>
 				<input type="text" placeholder="请输入验证码" v-model="FormData.pwy">
 				<button @click.prevent="yzm()">获取验证码</button>
-				<span class="error-msg">
+				<span class="error-msg">{{yzms}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
 			<div class="content">
 				<label>登录密码:</label>
 				<input type="text" placeholder="请输入你的登录密码" v-model="FormData.list">
-				<span class="error-msg">
+				<span class="error-msg">{{mmqd}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
 			<div class="content">
 				<label>确认密码:</label>
 				<input type="text" placeholder="请输入确认密码" v-model="FormData.mylist">
-				<span class="error-msg">
+				<span class="error-msg">{{cfmm}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
 			<div class="controls">
 				<input name="m1" type="checkbox" v-model="FormData.flag">
 				<span>同意协议并注册《尚品汇用户协议》</span>
-				<span class="error-msg">
+				<span class="error-msg">{{qdxy}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
@@ -71,6 +71,11 @@
 		name: 'Register',
 		data() {
 			return {
+				yhm:'1',
+				yzms:'1',
+				mmqd:'1',
+				cfmm:'1',
+				qdxy:'1',
 				FormData: {
 					phone: '',
 					pwy:'',
@@ -90,7 +95,7 @@
 						this.FormData.pwy=res.data
 					})
 				} else {
-					alert('你输入的手机号不合法')
+					this.yzms='你输入的手机号不合法'
 				}
 			},
 			zc(){
@@ -108,7 +113,7 @@
 						}
 					})
 				}else{
-					alert('两次密码不一致,请重新输入')
+					this.cfmm='两次密码不一致,请重新输入'
 					this.FormData.mylist=''
 					this.FormData.list=''
 				}
