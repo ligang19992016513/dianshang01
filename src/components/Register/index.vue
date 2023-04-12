@@ -46,7 +46,7 @@
 				<button @click.prevent="zc()">完成注册</button>
 			</div>
 		</form>
-
+		<h1>main分支注册的底部</h1>
 		<!-- 底部 -->
 		<div class="copyright">
 			<ul>
