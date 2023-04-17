@@ -6,6 +6,9 @@ import store from './store'
 import axios from 'axios'
 // 导入公共样式
 import './assets/css/reset.css'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
 // 设置axios的响应拦截器，处理数据
 axios.interceptors.response.use(res => {
 	return res.data

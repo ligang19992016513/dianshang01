@@ -75,36 +75,39 @@
 						</div>
 						<div class="orders">
 
-							<table class="order-item">
+							<table class="order-item" v-for="item in Centerlist">
 								<thead>
 									<tr>
 										<th colspan="5">
-											<span class="ordertitle">2017-02-11 11:59　订单编号：7867473872181848 <span
-													class="pull-right delete"><img
-														src="./images/delete.png"></span></span>
+											<span class="ordertitle">
+												{{item.expireTime}}　订单编号：{{item.outTradeNo}}
+												<span class="pull-right delete">
+													<img src="./images/delete.png">
+												</span>
+											</span>
 										</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
 										<td width="60%">
-											<div class="typographic">
-												<img src="./images/goods.png">
-												<a href="#" class="block-text">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒 送泡瓶面膜刷喷瓶 新款</a>
-												<span>x1</span>
+											<div class="typographic" v-for="item1 in item.orderDetailList">
+												<img :src="item1.imgUrl">
+												<a href="#" class="block-text">{{item1.skuName}}</a>
+												<span>x{{item1.skuNum}}</span>
 												<a href="#" class="service">售后申请</a>
 											</div>
 										</td>
-										<td rowspan="2" width="8%" class="center">小丽</td>
+										<td rowspan="2" width="8%" class="center">{{item.consignee}}</td>
 										<td rowspan="2" width="13%" class="center">
 											<ul class="unstyled">
-												<li>总金额¥138.00</li>
+												<li>总金额¥{{item.totalAmount.toFixed(2)}}</li>
 												<li>在线支付</li>
 
 											</ul>
 										</td>
 										<td rowspan="2" width="8%" class="center">
-											<a href="#" class="btn">已完成 </a>
+											<a href="#" class="btn">{{item.orderStatusName}}</a>
 										</td>
 										<td rowspan="2" width="13%" class="center">
 											<ul class="unstyled">
@@ -113,69 +116,6 @@
 												</li>
 
 											</ul>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<div class="typographic">
-												<img src="./images/goods.png">
-												<a href="#" class="block-text">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒 送泡瓶面膜刷喷瓶 新款</a>
-												<span>x1</span>
-												<a href="#" class="service">售后申请</a>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-
-							<table class="order-item">
-								<thead>
-									<tr>
-										<th colspan="5">
-											<span class="ordertitle">2017-02-11 11:59　订单编号：7867473872181848 <span
-													class="pull-right delete"><img
-														src="./images/delete.png"></span></span>
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td width="60%">
-											<div class="typographic">
-												<img src="./images/goods.png">
-												<a href="#" class="block-text">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒 送泡瓶面膜刷喷瓶 新款</a>
-												<span>x1</span>
-												<a href="#" class="service">售后申请</a>
-											</div>
-										</td>
-										<td rowspan="2" width="8%" class="center">小丽</td>
-										<td rowspan="2" width="13%" class="center">
-											<ul class="unstyled">
-												<li>总金额¥138.00</li>
-												<li>在线支付</li>
-
-											</ul>
-										</td>
-										<td rowspan="2" width="8%" class="center">
-											<a href="#" class="btn">已完成 </a>
-										</td>
-										<td rowspan="2" width="13%" class="center">
-											<ul class="unstyled">
-												<li>
-													<a href="mycomment.html" target="_blank">评价|晒单</a>
-												</li>
-
-											</ul>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<div class="typographic">
-												<img src="./images/goods.png">
-												<a href="#" class="block-text">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒 送泡瓶面膜刷喷瓶 新款</a>
-												<span>x1</span>
-												<a href="#" class="service">售后申请</a>
-											</div>
 										</td>
 									</tr>
 								</tbody>
@@ -280,8 +220,23 @@
 	export default {
 		name: 'Center',
 		data() {
-			return {}
+			return {
+				page: 1,
+				limit: 10,
+				Centerlist:[]
+			}
 		},
+		mounted() {
+			this.getCenter()
+		},
+		methods: {
+			getCenter() {
+				this.$http.get('/api/order/auth/' + this.page + '/' + this.limit).then(res => {
+					// console.log(res.data.records)
+					this.Centerlist=res.data.records
+				})
+			}
+		}
 	}
 </script>
 
@@ -393,7 +348,7 @@
 								width: 100%;
 								margin-bottom: 18px;
 								max-width: 100%;
-
+								border-bottom: none;
 								th {
 									padding: 6px 8px;
 									line-height: 18px;
@@ -422,21 +377,28 @@
 									text-align: left;
 									vertical-align: middle;
 									border: 1px solid #e6e6e6;
-
+									&:nth-child(1){
+										padding: 0;
+										border-bottom: none;
+										z-index: 1;
+									}
 									&.center {
 										text-align: center;
 									}
 
 									.typographic {
+										padding: 6px 0;
+										display: flex;
+										border-bottom: 1px solid #e6e6e6;
 										img {
-											float: left;
+											width: 50px;
+											height: 5S0px;
 											margin-right: 10px;
 										}
 
 										a {
-											float: left;
 											min-width: 80px;
-											max-width: 250px;
+											max-width: 350px;
 											color: #e1251b;
 
 											&.service {
@@ -445,7 +407,6 @@
 										}
 
 										span {
-											float: left;
 											min-width: 80px;
 											max-width: 250px;
 											text-align: center;

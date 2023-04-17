@@ -1,7 +1,7 @@
 <template>
 	<div class="spec-preview">
 		<img :src="skuDefaultImg" />
-		<div class="event"></div>
+		<div class="event" @mousemove="ydsj"></div>
 		<div class="big">
 			<img :src="skuDefaultImg" />
 		</div>
@@ -15,7 +15,44 @@
 		data() {
 			return {}
 		},
-		props: ['skuDefaultImg']
+		props: ['skuDefaultImg'],
+		methods: {
+			ydsj(e) {
+				var preview_img = document.querySelector('.event')
+				var mask = document.querySelector('.mask')
+				var big = document.querySelector('.big')
+				var img = document.querySelector('.big>img')
+				if (e.pageX - 75 - preview_img.offsetLeft - mask.offsetWidth / 2 < 0) {
+					var x = 0
+					var X = 0
+				} else if (e.pageX - 75 - preview_img.offsetLeft - mask.offsetWidth / 2 > preview_img
+					.offsetWidth - mask.offsetWidth) {
+					x = preview_img.offsetWidth - mask.offsetWidth
+					X = img.offsetWidth - big.offsetWidth
+				} else {
+					var x = e.pageX - 75 - preview_img.offsetLeft - mask.offsetWidth / 2
+					var X = x * ((img.offsetWidth - big.offsetWidth) / (preview_img.offsetWidth - mask
+						.offsetWidth))
+				}
+				if (e.pageY - 242 - preview_img.offsetTop - mask.offsetHeight / 2 < 0) {
+					var y = 0
+					var Y = 0
+				} else if (e.pageY - 242 - preview_img.offsetTop - mask.offsetHeight / 2 > preview_img
+					.offsetHeight - mask.offsetHeight) {
+					y = preview_img.offsetHeight - mask.offsetHeight
+					Y = img.offsetHeight - big.offsetHeight
+				} else {
+					var y = e.pageY - 242 - preview_img.offsetTop - mask.offsetHeight / 2
+					var Y = y * ((img.offsetHeight - big.offsetHeight) / (preview_img.offsetHeight - mask
+						.offsetHeight))
+				}
+				mask.style.left = x + 'px'
+				mask.style.top = y + 'px'
+				img.style.left = -X + 'px'
+				img.style.top = -Y + 'px'
+
+			}
+		}
 	}
 </script>
 

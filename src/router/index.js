@@ -10,6 +10,8 @@ import Detail from '../components/Detail路由组件_静态/Detail/index.vue'
 import Search from '../components/Search路由组件_静态/search/index.vue'
 import AddCartSuccess from '../components/添加到购物车成功_静态/AddCartSuccess/index.vue'
 import Trade from '../components/订单与支付相关组件_静态/Trade/index.vue'
+import pay from '../components/订单与支付相关组件_静态/Pay/index.vue'
+import paysuccess from '../components/订单与支付相关组件_静态/PaySuccess/index.vue'
 Vue.use(VueRouter)
 Vue.component('TypeNav', TypeNav) //注册全局组件
 const routes = [{
@@ -60,6 +62,14 @@ const routes = [{
 	// 结算页
 	path: '/Trade',
 	component: Trade
+}, {
+	// 支付页
+	path: '/pay/:orderId',
+	component: pay
+}, {
+	// 支付结果页
+	path: '/paysuccess/:orderId',
+	component: paysuccess
 }]
 
 const router = new VueRouter({

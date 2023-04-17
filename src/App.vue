@@ -59,6 +59,7 @@
 			qk(){
 				sessionStorage.clear()
 				this.$store.commit('changData','')
+				this.$http.get('/api/user/passport/logout').then(res=>{console.log(res)})
 			},
 			ss(){
 				if(this.$route.name=='Search'){
