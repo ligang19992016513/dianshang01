@@ -3,34 +3,34 @@
 		<!-- 注册内容 -->
 		<form class="register">
 			<h3>注册新用户
-				<span class="go">我有账号，去 <a href="login.html" target="_blank">登陆</a>
+				<span class="go">我有账号，去<router-link to="/Login">登录</router-link>
 				</span>
 			</h3>
 			<div class="content">
 				<label>手机号:</label>
-				<input type="text" placeholder="请输入你的手机号" v-model="FormData.phone">
+				<input type="text" placeholder="请输入你的手机号" v-model="FormData.phone" @blur="sjhyz()">
 				<span class="error-msg">{{yhm}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
 			<div class="content">
 				<label>验证码:</label>
-				<input type="text" placeholder="请输入验证码" v-model="FormData.pwy">
-				<button @click.prevent="yzm()">获取验证码</button>
+				<input type="text" placeholder="请输入验证码" v-model="FormData.pwy" @blur="yzmyz()">
+				<button @click.prevent="yzm()" :disabled="flags">{{zcyz}}获取验证码</button>
 				<span class="error-msg">{{yzms}}
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
 			<div class="content">
 				<label>登录密码:</label>
-				<input type="text" placeholder="请输入你的登录密码" v-model="FormData.list">
-				<span class="error-msg">{{mmqd}}
+				<input type="password" placeholder="请输入你的登录密码" v-model="FormData.list">
+				<span class="error-msg">
 					<!-- 错误提示信息 -->
 				</span>
 			</div>
 			<div class="content">
 				<label>确认密码:</label>
-				<input type="text" placeholder="请输入确认密码" v-model="FormData.mylist">
+				<input type="password" placeholder="请输入确认密码" v-model="FormData.mylist" @blur="mmyz()">
 				<span class="error-msg">{{cfmm}}
 					<!-- 错误提示信息 -->
 				</span>
@@ -70,51 +70,86 @@
 		name: 'Register',
 		data() {
 			return {
-				yhm:'1',
-				yzms:'1',
-				mmqd:'1',
-				cfmm:'1',
-				qdxy:'1',
+				mm: '',
+				yhm: '',
+				yzms: '',
+				cfmm: '',
+				qdxy: '',
+				zcyz:'',
+				flags: false,
 				FormData: {
 					phone: '',
-					pwy:'',
-					list:'',
-					mylist:'',
-					flag:true,
+					pwy: '',
+					list: '',
+					mylist: '',
+					flag: true,
 				}
 			}
 		},
 		methods: {
-			yzm() {
-				var reg=/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/g
+			sjhyz() {
+				var reg = /^(0|86|17951)?(13[0-9]|15[0-9]|17[678]|18[0-9]|14[57]|19[0-9])[0-9]{8}$/g
 				if (reg.test(this.FormData.phone)) {
-					this.$http.get('/api/user/passport/sendCode/' + this.FormData.phone).then(res => {
-						console.log(res)
-						alert('你的验证码为:'+res.data)
-						this.FormData.pwy=res.data
-					})
+					this.yhm = ''
+					return true
 				} else {
-					this.yzms='你输入的手机号不合法'
+					this.yhm = '你输入的手机号不合法'
 				}
 			},
-			zc(){
-				if(this.FormData.mylist===this.FormData.list){
-					this.$http.post('/api/user/passport/register',{
-						phone:this.FormData.phone,
-						password:this.FormData.list,
-						code:this.FormData.pwy
-					}).then(res=>{
+			mmyz() {
+				if (this.FormData.mylist === this.FormData.list) {
+					this.cfmm = ''
+					return true
+				} else {
+					this.cfmm = '两次密码不一致'
+				}
+			},
+			yzmyz() {
+				if (this.FormData.pwy === this.mm) {
+					this.yzms = ''
+					return true
+				} else {
+					this.yzms = '验证码不正确'
+				}
+
+			},
+			yzm() {
+				if (this.sjhyz()) {
+					this.flags = true
+					var index = 60
+					var time1 = setInterval(function() {
+						index--
+						this.zcyz=index+'秒后再'
+						if (index == 0) {
+							this.flags = false
+							this.zcyz=''
+							clearInterval(time1)
+							index = 60
+						}
+					}.bind(this), 1000)
+					this.$http.get('/api/user/passport/sendCode/' + this.FormData.phone).then(res => {
 						console.log(res)
-						if(res.code===200){
+						alert('你的验证码为:' + res.data)
+						this.mm = res.data
+					})
+				}
+			},
+			zc() {
+				if (this.mmyz() && this.FormData.flag && this.yzmyz()) {
+					this.$http.post('/api/user/passport/register', {
+						phone: this.FormData.phone,
+						password: this.FormData.list,
+						code: this.FormData.pwy
+					}).then(res => {
+						console.log(res)
+						if (res.code === 200) {
 							this.$router.push('/Login')
-						}else{
+						} else {
 							alert(res.message)
 						}
 					})
-				}else{
-					this.cfmm='两次密码不一致,请重新输入'
-					this.FormData.mylist=''
-					this.FormData.list=''
+				} else {
+					this.qdxy = '你还未签订协议'
 				}
 			}
 		}

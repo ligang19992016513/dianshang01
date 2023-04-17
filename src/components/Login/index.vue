@@ -71,7 +71,8 @@
 	data() {
 		return{
 			name:'',
-			pwy:''
+			pwy:'',
+			token:''
 		}
 	},
 	methods:{
@@ -82,7 +83,13 @@
 			}).then(res=>{
 				console.log(res)
 				if(res.code===200){
+					this.token=res.data.token
+					console.log(this.token)
+					sessionStorage.setItem('uname', this.name)
+					sessionStorage.setItem('token', this.token)
+					this.$store.commit('changData',this.name)
 					alert('登录成功')
+					this.$router.push('/home')
 				}else{
 					alert(res.message)
 				}
