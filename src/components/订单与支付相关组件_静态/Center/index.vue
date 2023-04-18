@@ -232,7 +232,6 @@
 		methods: {
 			getCenter() {
 				this.$http.get('/api/order/auth/' + this.page + '/' + this.limit).then(res => {
-					// console.log(res.data.records)
 					this.Centerlist=res.data.records
 				})
 			}
